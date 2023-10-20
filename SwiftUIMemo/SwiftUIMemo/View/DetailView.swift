@@ -13,6 +13,9 @@ struct DetailView: View {
     @EnvironmentObject var store: MemoStore
     
     @State private var showComposer = false
+    @State private var showDeleteAlart = false
+    
+    @Environment(\.dismiss) var dissmiss
     
     var body: some View {
         VStack {
@@ -36,6 +39,23 @@ struct DetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItemGroup(placement: .bottomBar) {
+                Button {
+                    showDeleteAlart = true
+                } label: {
+                    Image(systemName: "trash")
+                }
+                .foregroundColor(.red)
+                .alert("삭제 확인", isPresented: $showDeleteAlart) {
+                    Button(role: .destructive) {
+                        store.delete(memo: memo)
+                        dissmiss()
+                    } label: {
+                        Text("삭제")
+                    }
+                } message: {
+                    Text("메모를 삭제할까요?")
+                }
+                
                 Button {
                     showComposer = true
                 } label: {
